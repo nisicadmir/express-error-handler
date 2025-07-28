@@ -59,14 +59,18 @@ export interface NisixErrorResponse {
 }
 
 const nisixErrorHandler = (options: NisixErrorHandlerOptions = {}): ErrorRequestHandler => {
-  return (err: any, req: Request, res: Response, next: NextFunction): void => {
+  return (err: NisixError | any, req: Request, res: Response, next: NextFunction): void => {
     const status: number = err.status || err.statusCode || 500;
     const message: string = err.message || 'Internal Server Error';
     const debug: boolean = options.debug ?? process.env.NODE_ENV !== 'production';
 
     if (err instanceof NisixError) {
-      console.log('Error is known.');
-      res.status(err.status).send({ status, message: err.message, ...(debug && { stack: err.stack }) });
+      res.status(err.status).send({
+        status,
+        message: err.message,
+        ...(debug && { stack: err.stack }),
+        ...(err.metaData && { metaData: err.metaData }),
+      });
     } else {
       const response: NisixErrorResponse = {
         status,
