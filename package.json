@@ -1,11 +1,14 @@
 {
-  "name": "@nisicadmir/express-error-handler",
+  "name": "@nisix/express-error-handler",
   "version": "1.0.0",
   "description": "A type-safe error handler middleware for Express.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "nisicadmir",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "express",
     "error-handler",
@@ -14,13 +17,15 @@
   ],
   "scripts": {
     "build": "tsc",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "test": "ts-node test/test.ts"
   },
   "dependencies": {
     "express": "^5.1.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }
 }
