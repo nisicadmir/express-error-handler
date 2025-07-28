@@ -11,6 +11,10 @@ app.get('/unauthorized', (req, res, next) => {
   // When specific error code is provided then no need to set the code.
   throw new NisixError(NisixErrorCode.Unauthorized);
 });
+app.get('/unauthorized-custom-status-code', (req, res, next) => {
+  // When specific error code is provided then no need to set the code.
+  throw new NisixError(NisixErrorCode.Unauthorized, 455);
+});
 
 app.get('/not-found', (req, res, next) => {
   // When specific error code is provided then no need to set the code.

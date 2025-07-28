@@ -93,133 +93,98 @@ export enum NisixErrorCode {
 export class NisixError extends Error {
   public status: number;
   public metaData: any;
-  constructor(code: string = NisixErrorCode.UnknownError, status: number = 500, metaData: any = null) {
+  constructor(code: string = NisixErrorCode.UnknownError, status?: number, metaData: any = null) {
     super(code);
     Object.setPrototypeOf(this, new.target.prototype);
     this.name = code;
-    this.status = status;
     this.metaData = metaData;
+
+    // Use provided status if defined, otherwise determine from code
+    this.status = status !== undefined ? status : this.determineStatusFromCode(code);
+  }
+
+  private determineStatusFromCode(code: string): number {
     switch (code) {
       case NisixErrorCode.Unauthenticated:
-        this.status = NisixErrorStatus.Unauthorized; // 401
-        break;
+        return NisixErrorStatus.Unauthorized; // 401
       case NisixErrorCode.BadRequest:
-        this.status = NisixErrorStatus.BadRequest; // 400
-        break;
+        return NisixErrorStatus.BadRequest; // 400
       case NisixErrorCode.Unauthorized:
-        this.status = NisixErrorStatus.Forbidden; // 403
-        break;
+        return NisixErrorStatus.Forbidden; // 403
       case NisixErrorCode.NotFound:
-        this.status = NisixErrorStatus.NotFound; // 404
-        break;
+        return NisixErrorStatus.NotFound; // 404
       case NisixErrorCode.ServiceUnavailable:
-        this.status = NisixErrorStatus.ServiceUnavailable; // 503
-        break;
+        return NisixErrorStatus.ServiceUnavailable; // 503
       case NisixErrorCode.GatewayTimeout:
-        this.status = NisixErrorStatus.GatewayTimeout; // 504
-        break;
+        return NisixErrorStatus.GatewayTimeout; // 504
       case NisixErrorCode.BadGateway:
-        this.status = NisixErrorStatus.BadGateway; // 502
-        break;
+        return NisixErrorStatus.BadGateway; // 502
       case NisixErrorCode.InternalServerError:
-        this.status = NisixErrorStatus.InternalServerError; // 500
-        break;
+        return NisixErrorStatus.InternalServerError; // 500
       case NisixErrorCode.MethodNotAllowed:
-        this.status = NisixErrorStatus.MethodNotAllowed; // 405
-        break;
+        return NisixErrorStatus.MethodNotAllowed; // 405
       case NisixErrorCode.NotAcceptable:
-        this.status = NisixErrorStatus.NotAcceptable; // 406
-        break;
+        return NisixErrorStatus.NotAcceptable; // 406
       case NisixErrorCode.ProxyAuthenticationRequired:
-        this.status = NisixErrorStatus.ProxyAuthenticationRequired; // 407
-        break;
+        return NisixErrorStatus.ProxyAuthenticationRequired; // 407
       case NisixErrorCode.RequestTimeout:
-        this.status = NisixErrorStatus.RequestTimeout; // 408
-        break;
+        return NisixErrorStatus.RequestTimeout; // 408
       case NisixErrorCode.Conflict:
-        this.status = NisixErrorStatus.Conflict; // 409
-        break;
+        return NisixErrorStatus.Conflict; // 409
       case NisixErrorCode.Gone:
-        this.status = NisixErrorStatus.Gone; // 410
-        break;
+        return NisixErrorStatus.Gone; // 410
       case NisixErrorCode.LengthRequired:
-        this.status = NisixErrorStatus.LengthRequired; // 411
-        break;
+        return NisixErrorStatus.LengthRequired; // 411
       case NisixErrorCode.PreconditionFailed:
-        this.status = NisixErrorStatus.PreconditionFailed; // 412
-        break;
+        return NisixErrorStatus.PreconditionFailed; // 412
       case NisixErrorCode.PayloadTooLarge:
-        this.status = NisixErrorStatus.PayloadTooLarge; // 413
-        break;
+        return NisixErrorStatus.PayloadTooLarge; // 413
       case NisixErrorCode.URITooLong:
-        this.status = NisixErrorStatus.URITooLong; // 414
-        break;
+        return NisixErrorStatus.URITooLong; // 414
       case NisixErrorCode.UnsupportedMediaType:
-        this.status = NisixErrorStatus.UnsupportedMediaType; // 415
-        break;
+        return NisixErrorStatus.UnsupportedMediaType; // 415
       case NisixErrorCode.RangeNotSatisfiable:
-        this.status = NisixErrorStatus.RangeNotSatisfiable; // 416
-        break;
+        return NisixErrorStatus.RangeNotSatisfiable; // 416
       case NisixErrorCode.ExpectationFailed:
-        this.status = NisixErrorStatus.ExpectationFailed; // 417
-        break;
+        return NisixErrorStatus.ExpectationFailed; // 417
       case NisixErrorCode.ImATeapot:
-        this.status = NisixErrorStatus.ImATeapot; // 418
-        break;
+        return NisixErrorStatus.ImATeapot; // 418
       case NisixErrorCode.MisdirectedRequest:
-        this.status = NisixErrorStatus.MisdirectedRequest; // 421
-        break;
+        return NisixErrorStatus.MisdirectedRequest; // 421
       case NisixErrorCode.UnprocessableEntity:
-        this.status = NisixErrorStatus.UnprocessableEntity; // 422
-        break;
+        return NisixErrorStatus.UnprocessableEntity; // 422
       case NisixErrorCode.Locked:
-        this.status = NisixErrorStatus.Locked; // 423
-        break;
+        return NisixErrorStatus.Locked; // 423
       case NisixErrorCode.FailedDependency:
-        this.status = NisixErrorStatus.FailedDependency; // 424
-        break;
+        return NisixErrorStatus.FailedDependency; // 424
       case NisixErrorCode.TooEarly:
-        this.status = NisixErrorStatus.TooEarly; // 425
-        break;
+        return NisixErrorStatus.TooEarly; // 425
       case NisixErrorCode.UpgradeRequired:
-        this.status = NisixErrorStatus.UpgradeRequired; // 426
-        break;
+        return NisixErrorStatus.UpgradeRequired; // 426
       case NisixErrorCode.PreconditionRequired:
-        this.status = NisixErrorStatus.PreconditionRequired; // 428
-        break;
+        return NisixErrorStatus.PreconditionRequired; // 428
       case NisixErrorCode.TooManyRequests:
-        this.status = NisixErrorStatus.TooManyRequests; // 429
-        break;
+        return NisixErrorStatus.TooManyRequests; // 429
       case NisixErrorCode.RequestHeaderFieldsTooLarge:
-        this.status = NisixErrorStatus.RequestHeaderFieldsTooLarge; // 431
-        break;
+        return NisixErrorStatus.RequestHeaderFieldsTooLarge; // 431
       case NisixErrorCode.UnavailableForLegalReasons:
-        this.status = NisixErrorStatus.UnavailableForLegalReasons; // 451
-        break;
+        return NisixErrorStatus.UnavailableForLegalReasons; // 451
       case NisixErrorCode.NotImplemented:
-        this.status = NisixErrorStatus.NotImplemented; // 501
-        break;
+        return NisixErrorStatus.NotImplemented; // 501
       case NisixErrorCode.HTTPVersionNotSupported:
-        this.status = NisixErrorStatus.HTTPVersionNotSupported; // 505
-        break;
+        return NisixErrorStatus.HTTPVersionNotSupported; // 505
       case NisixErrorCode.VariantAlsoNegotiates:
-        this.status = NisixErrorStatus.VariantAlsoNegotiates; // 506
-        break;
+        return NisixErrorStatus.VariantAlsoNegotiates; // 506
       case NisixErrorCode.InsufficientStorage:
-        this.status = NisixErrorStatus.InsufficientStorage; // 507
-        break;
+        return NisixErrorStatus.InsufficientStorage; // 507
       case NisixErrorCode.LoopDetected:
-        this.status = NisixErrorStatus.LoopDetected; // 508
-        break;
+        return NisixErrorStatus.LoopDetected; // 508
       case NisixErrorCode.NotExtended:
-        this.status = NisixErrorStatus.NotExtended; // 510
-        break;
+        return NisixErrorStatus.NotExtended; // 510
       case NisixErrorCode.NetworkAuthenticationRequired:
-        this.status = NisixErrorStatus.NetworkAuthenticationRequired; // 511
-        break;
+        return NisixErrorStatus.NetworkAuthenticationRequired; // 511
       default:
-        this.status = NisixErrorStatus.InternalServerError; // Default to 500
-        break;
+        return NisixErrorStatus.InternalServerError; // Default to 500
     }
   }
 }
