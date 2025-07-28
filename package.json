@@ -1,6 +1,6 @@
 {
   "name": "@nisix/express-error-handler",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A type-safe error handler middleware for Express.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,6 +8,11 @@
   "license": "MIT",
   "publishConfig": {
     "access": "public"
+  },
+  "homepage": "https://github.com/nisicadmir/express-error-handler",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com/nisicadmir/express-error-handler.git"
   },
   "keywords": [
     "express",
