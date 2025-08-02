@@ -48,6 +48,7 @@ export enum NisixErrorStatus {
 
 export enum NisixErrorCode {
   UnknownError = 'UnknownError',
+  ValidationError = 'ValidationError',
   Unauthenticated = 'Unauthenticated',
   BadRequest = 'BadRequest',
   Unauthorized = 'Unauthorized',
@@ -105,6 +106,8 @@ export class NisixError extends Error {
 
   private determineStatusFromCode(code: string): number {
     switch (code) {
+      case NisixErrorCode.ValidationError:
+        return NisixErrorStatus.UnprocessableEntity; // 422
       case NisixErrorCode.Unauthenticated:
         return NisixErrorStatus.Unauthorized; // 401
       case NisixErrorCode.BadRequest:
