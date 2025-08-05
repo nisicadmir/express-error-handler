@@ -1,6 +1,6 @@
 {
   "name": "@nisix/express-error-handler",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A type-safe error handler middleware for Express.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -26,6 +26,7 @@
     "test": "ts-node test/test.ts"
   },
   "dependencies": {
+    "@nisix/express-error-handler": "^1.0.3",
     "express": "^5.1.0"
   },
   "devDependencies": {
