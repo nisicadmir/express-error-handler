@@ -58,9 +58,11 @@ app.get('/example', (req, res, next) => {
 The error handler supports a wide range of HTTP status codes, including:
 
 - `BadRequest` (400)
-- `Unauthorized` (401)
-- `Forbidden` (403)
+- `Unauthenticated` (401)
+- `Unauthorized` and `Forbidden` (403)
 - `NotFound` (404)
+- `DuplicateEntry` (409)
+- `ValidationError` (422)
 - `InternalServerError` (500)
 - And many more...
 
@@ -78,7 +80,7 @@ Here's a complete example of using the error handler in an Express application:
 
 ```typescript
 import express from 'express';
-import nisixErrorHandler, { NisixError, NisixErrorCode } from '@nisix/express-error-handler';
+import nisixErrorHandler, { NisixError, NisixErrorCode, NisixErrorStatus } from '@nisix/express-error-handler';
 
 const app = express();
 

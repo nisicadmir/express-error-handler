@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
+import type { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
 
 export enum NisixErrorStatus {
   // Client Error Responses
@@ -116,6 +116,7 @@ export class NisixError extends Error {
       case NisixErrorCode.BadRequest:
         return NisixErrorStatus.BadRequest; // 400
       case NisixErrorCode.Unauthorized:
+      case NisixErrorCode.Forbidden:
         return NisixErrorStatus.Forbidden; // 403
       case NisixErrorCode.NotFound:
         return NisixErrorStatus.NotFound; // 404
@@ -206,7 +207,12 @@ export interface NisixErrorResponse {
 }
 
 const nisixErrorHandler = (options: NisixErrorHandlerOptions = {}): ErrorRequestHandler => {
-  return (err: NisixError | any, req: Request, res: Response, next: NextFunction): void => {
+  return (err: NisixError | any, _req: Request, res: Response, next: NextFunction): void => {
+    if (res.headersSent) {
+      next(err);
+      return;
+    }
+
     const status: number = err.status || err.statusCode || 500;
     const message: string = err.message || 'Internal Server Error';
     const debug: boolean = options.debug ?? process.env.NODE_ENV !== 'production';

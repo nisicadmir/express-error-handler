@@ -26,7 +26,6 @@
     "test": "ts-node test/test.ts"
   },
   "dependencies": {
-    "@nisix/express-error-handler": "^1.0.3",
     "express": "^5.1.0"
   },
   "devDependencies": {

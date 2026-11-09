@@ -1,26 +1,28 @@
-import express, { Express } from 'express';
+import assert from 'node:assert/strict';
+import { test } from 'node:test';
+import type { Request, Response } from 'express';
 import errorHandler, { NisixError, NisixErrorCode, NisixErrorStatus } from '../src/index';
 
-const app: Express = express();
-
-app.get('/custom-error', (req, res, next) => {
-  throw new NisixError('Test Error', NisixErrorStatus.BadRequest, { test: 'test' });
+test('uses the default status for Forbidden and Unauthorized', () => {
+  assert.equal(new NisixError(NisixErrorCode.Forbidden).status, NisixErrorStatus.Forbidden);
+  assert.equal(new NisixError(NisixErrorCode.Unauthorized).status, NisixErrorStatus.Forbidden);
 });
 
-app.get('/unauthorized', (req, res, next) => {
-  // When specific error code is provided then no need to set the code.
-  throw new NisixError(NisixErrorCode.Unauthorized);
-});
-app.get('/unauthorized-custom-status-code', (req, res, next) => {
-  // When specific error code is provided then no need to set the code.
-  throw new NisixError(NisixErrorCode.Unauthorized, 455);
+test('uses 409 for DuplicateEntry and respects an explicit status', () => {
+  assert.equal(new NisixError(NisixErrorCode.DuplicateEntry).status, NisixErrorStatus.Conflict);
+  assert.equal(new NisixError(NisixErrorCode.DuplicateEntry, 455).status, 455);
 });
 
-app.get('/not-found', (req, res, next) => {
-  // When specific error code is provided then no need to set the code.
-  throw new NisixError(NisixErrorCode.NotFound);
+test('passes the original error to the next handler when headers are sent', () => {
+  const err = new Error('The stream failed');
+  const req = {} as Request;
+  const res = { headersSent: true } as Response;
+  const forwardedErrors: unknown[] = [];
+
+  errorHandler()(err, req, res, (forwardedError: unknown) => {
+    forwardedErrors.push(forwardedError);
+  });
+
+  assert.equal(forwardedErrors.length, 1);
+  assert.equal(forwardedErrors[0], err);
 });
-
-app.use(errorHandler({ debug: true }));
-
-app.listen(3000, () => console.log('Server running on port 3000'));
